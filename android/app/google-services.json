@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1015609124330",
+    "project_id": "software-engineering-20",
+    "storage_bucket": "software-engineering-20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015609124330:android:3bc84ec55aad0372c8be93",
+        "android_client_info": {
+          "package_name": "com.xita.review_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015609124330-4rj3kn5le0jag85vppngbj583tdl2l50.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.xita.review_app",
+            "certificate_hash": "939e723325701b5ab21f253a40ec8cdfc0a8f187"
+          }
+        },
+        {
+          "client_id": "1015609124330-5i9unvsi72ttvlkj6ssak0ro2ahjof7g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF_rxlfiEdsQcPLu4U1UGPoOUJRNw_P-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015609124330-5i9unvsi72ttvlkj6ssak0ro2ahjof7g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
