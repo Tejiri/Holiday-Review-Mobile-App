@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:review_app/constants.dart';
 
-Widget customTextField(
-    {required BuildContext context,
-    required IconData iconData,
-    required TextEditingController controller,
-    required String hint,
-    required String label,
-    bool? obscureText,
-    double? width,
-    }) {
+Widget customTextField({
+  required BuildContext context,
+  required IconData iconData,
+  required TextEditingController controller,
+  required String hint,
+  required String label,
+  bool? obscureText,
+  double? width,
+}) {
   return Container(
     // height: 40,
 
@@ -42,12 +42,15 @@ Widget customTextField(
   );
 }
 
-customButton(
-    {required BuildContext context,
-    Function()? onTap,
-    required String text,
-    bool? isLoading,
-    double? width}) {
+customButton({
+  required BuildContext context,
+  Function()? onTap,
+  required String text,
+  bool? isLoading,
+  double? width,
+  Color? color,
+   Color? textColor,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(
@@ -55,7 +58,7 @@ customButton(
       margin: EdgeInsets.only(top: 20),
       width: width ?? MediaQuery.of(context).size.width / 1.3,
       decoration: BoxDecoration(
-          color: lightBlueGray,
+          color: color ?? lightBlueGray,
           // gradient: darkBlueGray,
           borderRadius: BorderRadius.circular(12)),
       child: Center(
@@ -68,7 +71,7 @@ customButton(
                   ))
               : Text(
                   text,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: textColor?? Colors.black),
                 )),
     ),
   );

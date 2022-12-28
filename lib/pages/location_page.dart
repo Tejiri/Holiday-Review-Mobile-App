@@ -1,17 +1,25 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:review_app/constants.dart';
+import 'package:review_app/controllers/random.dart';
+import 'package:review_app/models/location.dart';
+import 'package:review_app/models/review.dart';
 import 'package:review_app/pages/comments_page.dart';
+import 'package:review_app/providers/UserRatingProvider.dart';
 import 'package:review_app/widgets/ui_components.dart';
+import 'package:skeletons/skeletons.dart';
 
 class LocationPage extends StatefulWidget {
-  String locationId;
+  Location location;
 
-  LocationPage({super.key, required this.locationId});
+  LocationPage({super.key, required this.location});
 
   @override
   State<LocationPage> createState() => _LocationPageState();
@@ -19,77 +27,65 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   TextEditingController reviewComment = TextEditingController();
-  double rating = 3.0;
+  // double rating = 3.0;
+  var reviewsStream;
+  var averageRatingStream;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    reviewsStream = firestore
+        .collection(uploadedLocationsCollectionName)
+        .doc(widget.location.id)
+        .collection(reviewsCollectionName)
+        .orderBy("createdAt", descending: true)
+        .limit(5)
+        .snapshots();
+
+    averageRatingStream = firestore
+        .collection(uploadedLocationsCollectionName)
+        .doc(widget.location.id)
+        .snapshots();
+    log(widget.location.id.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text("Ratings"),
+        title: Text(widget.location.title),
         actions: [
           IconButton(
               onPressed: () {
                 showBottomSheet();
               },
               icon: Icon(Icons.info))
-
-          // PopupMenuButton(
-          //     // add icon, by default "3 dot" icon
-          //     // icon: Icon(Icons.book)
-          //     itemBuilder: (context) {
-          //   return [
-          //     PopupMenuItem<int>(
-          //       value: 0,
-          //       child: Text("Filter Search"),
-          //     ),
-          //     // PopupMenuItem<int>(
-          //     //   value: 1,
-          //     //   child: Text("Settings"),
-          //     // ),
-          //     PopupMenuItem<int>(
-          //       value: 1,
-          //       child: Text("Logout"),
-          //     ),
-          //   ];
-          // }, onSelected: (value) {
-          //   if (value == 0) {
-          //     showBottomSheet();
-          //     // print("My account menu is selected.");
-          //   } else if (value == 1) {
-          //     // Navigator.pushAndRemoveUntil(
-          //     //     context,
-          //     //     MaterialPageRoute(
-          //     //       builder: (context) => LoginPage(),
-          //     //     ),
-          //     //     (route) => false);
-          //   }
-          // }),
         ],
       ),
       body: Stack(
         children: [
           Column(
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height / 3.5,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage("assets/images/placeholder.jpg"))),
-
-                // child: SafeArea(
-                //   child:
-                //   Align(
-                //     alignment: Alignment.topLeft,
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Container(
-                //         color: lightBlueGray,
-                //         child: Icon(Icons.arrow_back, color: Colors.red)),
-                //     ),
-                //   ),
-                // ),
-                // child: Image.asset("assets/images/placeholder.jpg"),
+              CachedNetworkImage(
+                imageUrl: widget.location.imageUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                    height: MediaQuery.of(context).size.height / 3.5,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover, image: imageProvider))),
+                placeholder: (context, url) => SkeletonItem(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 3.5,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 0.25),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.amber,
+                    ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
               Expanded(
                 child: Container(
@@ -111,9 +107,9 @@ class _LocationPageState extends State<LocationPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              heading(title: "5 recent ratings", fontSize: 15),
+                              heading(title: "5 recent reviews", fontSize: 15),
                               heading(
-                                  title: "view all ratings",
+                                  title: "view all reviews",
                                   fontSize: 15,
                                   color: primaryColor),
                             ],
@@ -121,22 +117,54 @@ class _LocationPageState extends State<LocationPage> {
                         ),
                       ),
                       Expanded(
-                          child: Container(
-                        child: ListView(
-                          children: [
-                            singleReview(
-                                context: context, showNumberOfComments: true),
-                            singleReview(
-                                context: context, showNumberOfComments: true),
-                            singleReview(
-                                context: context, showNumberOfComments: true),
-                            singleReview(
-                                context: context, showNumberOfComments: true),
-                            singleReview(
-                                context: context, showNumberOfComments: true)
-                          ],
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            setState(() {});
+                            return;
+                          },
+                          child: StreamBuilder(
+                              stream: reviewsStream,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<
+                                          QuerySnapshot<Map<String, dynamic>>>
+                                      locationSnapshot) {
+                                if (locationSnapshot.hasData) {
+                                  // var size =  locationSnapshot.data?.size.toString();
+                                  // log(size.toString());
+                                  if (locationSnapshot.data?.size == 0) {
+                                    return Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        child: heading(
+                                            title: "No reviews available"));
+                                  }
+                                  // if (locationSnapshot.data?.docs.length != null) {
+
+                                  //   }
+                                  return SingleChildScrollView(
+                                    child: ListView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      children: locationSnapshot.data!.docs
+                                          .map((DocumentSnapshot document) {
+                                        Map<String, dynamic> data = document
+                                            .data()! as Map<String, dynamic>;
+                                        Review review =
+                                            Review.fromFirebase(data);
+
+                                        return singleReview(
+                                            context: context,
+                                            location: widget.location,
+                                            review: review,
+                                            showNumberOfComments: true);
+                                      }).toList(),
+                                    ),
+                                  );
+                                }
+
+                                return Container();
+                              }),
                         ),
-                      ))
+                      ),
                     ],
                   ),
                 ),
@@ -167,35 +195,52 @@ class _LocationPageState extends State<LocationPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    heading(title: "This is the title"),
+                    heading(title: widget.location.title),
                     Padding(
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Text(
-                        "Abuja, Nigeria",
+                        widget.location.location,
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    RatingBar.builder(
-                      // tapOnlyMode: false,
-                      // updateOnDrag: true,
-                      ignoreGestures: true,
-                      itemSize: 15,
-                      initialRating: rating,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      // itemPadding:
-                      //     EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        size: 1,
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
-                    ),
+                    StreamBuilder(
+                        stream: averageRatingStream,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<
+                                    DocumentSnapshot<Map<String, dynamic>>>
+                                averageRatingSnapshot) {
+                          if (averageRatingSnapshot.hasData) {
+                            Location averageForLocation = Location.fromFirebase(
+                                averageRatingSnapshot.data?.data() as Map);
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RatingBar.builder(
+                                  ignoreGestures: true,
+                                  itemSize: 15,
+                                  initialRating:
+                                      reviewsAverage(averageForLocation),
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemBuilder: (context, _) => Icon(
+                                    size: 1,
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                    print(rating);
+                                  },
+                                ),
+                                Text(
+                                    " (${reviewsAverage(averageForLocation).toStringAsFixed(2)})")
+                              ],
+                            );
+                          }
+
+                          return Container();
+                        })
                   ],
                 ),
               ),
@@ -206,183 +251,144 @@ class _LocationPageState extends State<LocationPage> {
       floatingActionButton: FloatingActionButton(
           backgroundColor: primaryColor,
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text("Leave Review"),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                        "Your review is valued to us to validate the authenticity of locations"),
-                    Container(
-                      margin: EdgeInsets.only(top: 20),
-                      // color: Colors.amberAccent,
-                      child: RatingBar.builder(
-                        // tapOnlyMode: false,
-                        // updateOnDrag: true,
-                        // ignoreGestures: true,
-                        itemSize: 40,
-                        initialRating: rating,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        // itemPadding:
-                        //     EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) => Icon(
-                          size: 1,
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
-                      ),
-                    ),
-                    Container(
-                        // color: Colors.amberAccent,
-                        child: TextField(
-                      controller: reviewComment,
-                      decoration: InputDecoration(
-                          label: Text("Comment"), hintText: "Enter comment"),
-                    ))
-                  ],
-                ),
-                actions: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            color: Colors.grey[200],
-                            height: 30,
-                            child: Center(
-                                child: Text(
-                              "Cancel",
-                            )),
-                          ),
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.only(left: 5, right: 5)),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // log(rating.toString());
-                            // log(reviewComment.text.toString());
+            if (authentication.currentUser?.uid == widget.location.uploadedBy) {
+              bottomAlert(
+                  context: context,
+                  isError: true,
+                  title: "Review Failed",
+                  message: "Cannot send review on your uploaded location");
+            } else {
+              firestore
+                  .collection(uploadedLocationsCollectionName)
+                  .doc(widget.location.id)
+                  .collection(reviewsCollectionName)
+                  .where("reviewBy", isEqualTo: authentication.currentUser?.uid)
+                  .limit(1)
+                  .get()
+                  .then((userPreviousReview) {
+                     var previousRating;
+                if (userPreviousReview.size != 0) {
+                  Review userReview =
+                      Review.fromFirebase(userPreviousReview.docs.first.data());
+                 previousRating = userReview.rating;
+                  Provider.of<userRatingProvider>(context, listen: false)
+                      .rating = userReview.rating;
 
-                            // firestore
-                            //     .collection(uploadedLocationsCollectionName)
-                            //     .doc(widget.locationId)
-                            //     .collection(reviewsCollectionName)
-                            //     .add();
-                          },
-                          child: Container(
-                            color: darkBlueGray,
-                            height: 30,
-                            child: Center(
-                                child: Text(
-                              "Send",
-                            )),
+                  reviewComment.text = userReview.message;
+                } else {}
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text("Leave Review"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                            "Your review is valued to us to validate the authenticity of locations"),
+                        Container(
+                          margin: EdgeInsets.only(top: 20),
+                          child: RatingBar.builder(
+                            itemSize: 40,
+                            initialRating: Provider.of<userRatingProvider>(
+                                    context,
+                                    listen: false)
+                                .rating,
+                            minRating: 0,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            // itemPadding:
+                            //     EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              size: 1,
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (currentRating) {
+                              Provider.of<userRatingProvider>(context,
+                                      listen: false)
+                                  .updateUserRatingProvider(currentRating);
+                            },
                           ),
                         ),
+                        Container(
+                            // color: Colors.amberAccent,
+                            child: TextField(
+                          controller: reviewComment,
+                          decoration: InputDecoration(
+                              label: Text("Comment"),
+                              hintText: "Enter comment"),
+                        ))
+                      ],
+                    ),
+                    actions: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                color: Colors.grey[200],
+                                height: 30,
+                                child: Center(
+                                    child: Text(
+                                  "Cancel",
+                                )),
+                              ),
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(left: 5, right: 5)),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                sendReview(
+                                  previousRating: previousRating,
+                                    reviewId: userPreviousReview.size == 0
+                                        ? null
+                                        : userPreviousReview.docs.first.id,
+                                    location: widget.location,
+                                    newReview: userPreviousReview.size == 0
+                                        ? true
+                                        : false,
+                                    reviewComment: reviewComment.text,
+                                    userRating: Provider.of<userRatingProvider>(
+                                            context,
+                                            listen: false)
+                                        .rating);
+                                reviewComment.text = "";
+                                Navigator.pop(context);
+                                Provider.of<userRatingProvider>(context,
+                                        listen: false)
+                                    .updateUserRatingProvider(3.0);
+                                // log(rating.toString());
+                                // log(reviewComment.text.toString());
+                              },
+                              child: Container(
+                                color: darkBlueGray,
+                                height: 30,
+                                child: Center(
+                                    child: Text(
+                                  "Send",
+                                )),
+                              ),
+                            ),
+                          )
+                        ],
                       )
                     ],
-                  )
-                ],
-              ),
-            );
+                  ),
+                );
+              });
+            }
           },
           child: Icon(Icons.reviews)),
     );
   }
 
-  // Widget singleReview() {
-  //   return Container(
-  //     margin: EdgeInsets.only(top: 10),
-  //     padding: EdgeInsets.only(bottom: 10, left: 20, right: 20),
-  //     decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.4))),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         CircleAvatar(),
-  //         Expanded(
-  //           child: Container(
-  //             margin: EdgeInsets.only(left: 10),
-  //             // color: Colors.green,
-  //             // width: 150,
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 heading(title: "Username", fontSize: 15),
-  //                 RatingBar.builder(
-  //                   // tapOnlyMode: false,
-  //                   // updateOnDrag: true,
-  //                   ignoreGestures: true,
-  //                   itemSize: 13,
-  //                   initialRating: 3,
-  //                   minRating: 1,
-  //                   direction: Axis.horizontal,
-  //                   allowHalfRating: true,
-  //                   itemCount: 5,
-  //                   // itemPadding:
-  //                   //     EdgeInsets.symmetric(horizontal: 4.0),
-  //                   itemBuilder: (context, _) => Icon(
-  //                     size: 1,
-  //                     Icons.star,
-  //                     color: Colors.amber,
-  //                   ),
-  //                   onRatingUpdate: (rating) {
-  //                     print(rating);
-  //                   },
-  //                 ),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(top: 5, bottom: 5),
-  //                   child: Text(
-  //                     "didsidni dsodsj sdoo sd osdj oopds jopjojs odsjosd jpd dsijdsio ij disd jiosdjio djioi oi idsojsd ioido idsojo djiod osidio oiio jsdio sjdoij",
-  //                     style: TextStyle(fontSize: 13),
-  //                   ),
-  //                 ),
-  //                 Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     Text(
-  //                       "3 days ago",
-  //                       style: TextStyle(
-  //                           color: Color.fromARGB(255, 118, 115, 115)),
-  //                     ),
-  //                     GestureDetector(
-  //                       onTap: () {
-  //                         Navigator.push(
-  //                             context,
-  //                             MaterialPageRoute(
-  //                               builder: (context) => CommentsPage(),
-  //                             ));
-  //                       },
-  //                       child: Text(
-  //                         "4 comments",
-  //                         style: TextStyle(color: primaryColor),
-  //                       ),
-  //                     )
-  //                   ],
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-
   showBottomSheet() {
-    // showBottomSheet()
-
-    // SafeArea(child: )
     return showModalBottomSheet(
         backgroundColor: Colors.white,
         context: context,
@@ -393,31 +399,26 @@ class _LocationPageState extends State<LocationPage> {
               topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
         ),
         builder: (BuildContext context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                // height: 50,
-                // color: Colors.black,
-                margin: EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [heading(title: "Description")],
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  // height: 50,
+                  // color: Colors.black,
+                  // margin: EdgeInsets.only(top: 20,),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [heading(title: "Description")],
+                  ),
                 ),
-              ),
-
-              Container(
-                height: 200,
-              )
-              // Expanded(child: StatefulBuilder(
-              //     builder: (BuildContext content, StateSetter setState) {
-              //   return Container(
-              //     // decoration: BoxDecoration(image: primaryColor),
-              //       );
-              // })
-
-              // )
-            ],
+                Container(
+                  height: 200,
+                  child: Text(widget.location.description),
+                )
+              ],
+            ),
           );
         });
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,9 +8,11 @@ import 'package:lottie/lottie.dart';
 import 'package:review_app/constants.dart';
 import 'package:review_app/controllers/auth.dart';
 import 'package:review_app/pages/bottom_navigation_page.dart';
+import 'package:review_app/pages/moderator_pages/moderator_homepage.dart';
 import 'package:review_app/pages/registration_page.dart';
 import 'package:review_app/widgets/form_components.dart';
 import 'package:review_app/widgets/ui_components.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -57,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: true,
                     controller: password,
                     hint: "Enter Password",
-                    label: "Username"),
+                    label: "Password"),
                 customButton(
                   isLoading: buttonLoading,
                   text: "Login",
@@ -66,21 +70,45 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() {
                       buttonLoading = true;
                     });
-                    signInUser(email: email.text, password: password.text)
-                        .then((value) {
+                    signInUser(
+                            email: email.text,
+                            password: password.text,
+                            context: context)
+                        .then((value) async {
                       setState(() {
                         buttonLoading = false;
                       });
                       if (value["result"]) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BottomNavigationPage(),
-                          ),
-                          (route) => false,
-                        );
+                        log(value.toString());
+                        final prefs = await SharedPreferences.getInstance();
+
+                        if (value["userRole"] == "moderator") {
+                          await prefs
+                              .setBool('isModerator', true)
+                              .then((value) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ModeratorHomePage(),
+                              ),
+                              (route) => false,
+                            );
+                          });
+                        } else {
+                          await prefs
+                              .setBool('isModerator', false)
+                              .then((value) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BottomNavigationPage(),
+                              ),
+                              (route) => false,
+                            );
+                          });
+                        }
                       } else {
-                        customAlert(
+                        middleAlert(
                             context: context,
                             type: "error",
                             title: "Error",

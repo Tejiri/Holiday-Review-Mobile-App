@@ -29,6 +29,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  another_flushbar: ^1.12.29
   cached_network_image: ^3.2.2
   cloud_firestore: ^4.1.0
   cupertino_icons: ^1.0.2
@@ -46,7 +47,10 @@ dependencies:
   google_nav_bar: ^5.0.6
   image_picker: ^0.8.6
   lottie: ^1.4.3
+  provider: ^6.0.4
+  readmore: ^2.2.0
   rflutter_alert: ^2.0.4
+  shared_preferences: ^2.0.15
   skeletons: ^0.0.3
   slide_to_act: ^2.0.1
 

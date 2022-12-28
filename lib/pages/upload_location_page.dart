@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:review_app/controllers/random.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/widgets/form_components.dart';
 import 'package:review_app/widgets/ui_components.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class UploadLocationPage extends StatefulWidget {
   const UploadLocationPage({super.key});
@@ -90,6 +92,8 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: primaryColor,
+        title: Text("Upload Location"),
+        centerTitle: true,
       ),
       body: Container(
         margin: EdgeInsets.all(20),
@@ -106,7 +110,7 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
                   Column(
                     children: [
                       heading(title: "Upload Location"),
-                      Text("dsds"),
+                      // Text("dsds"),
                       GestureDetector(
                         onTap: () async {
                           try {
@@ -156,10 +160,11 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          "Max file size: 50mb",
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
+                                        // child:
+                                        //  Text(
+                                        //   "Max file size: 50mb",
+                                        //   style: TextStyle(color: Colors.grey),
+                                        // ),
                                       )
                                     ],
                                   )
@@ -290,43 +295,72 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
                 setState(() {
                   buttonLoading = true;
                 });
-                await storage
-                    .ref()
-                    .child(
-                        "/LOCATIONS/${authentication.currentUser?.uid}/${generateRandomString(10)}")
-                    .putFile(selectedImage)
-                    .then((value) async {
-                  final imageUrl = await value.ref.getDownloadURL();
-                  // DocumentReference documentReference =
-                  //     firestore.collection(locationsCollectionName).doc();
-                  //     String id = documentReference.id;
-                  Location locationToUpload = Location(
-                      category: categorySelected,
-                      commentsSize: 0.0,
-                      description: description.text,
-                      createdAt: FieldValue.serverTimestamp(),
-                      id: "",
-                      imageUrl: imageUrl,
-                      location: locationSelected,
-                      ratingsAverage: 0.0,
-                      ratingsSize: 0,
-                      status: "pending",
-                      title: title.text,
-                      uploadedBy: authentication.currentUser!.uid);
 
-                  // log(locationToUpload.toMap().toString());
-
-                  firestore
-                      .collection(uploadedLocationsCollectionName)
-                      .add(locationToUpload.toMap())
-                      .then((value) {
-                    value.update({"id": value.id});
-                    setState(() {
-                      buttonLoading = false;
-                    });
+                if (selectedImage == null) {
+                  middleAlert(
+                      context: context,
+                      type: "error",
+                      title: "Image not selected",
+                      desc: "Please select a location image");
+                  setState(() {
+                    buttonLoading = false;
                   });
-                  // log(imageUrl);
-                });
+                } else if (title.text == "" || description.text == "") {
+                  middleAlert(
+                      context: context,
+                      type: "error",
+                      title: "Form incomplete",
+                      desc: "Please fill all form details");
+                  setState(() {
+                    buttonLoading = false;
+                  });
+                } else {
+                  await storage
+                      .ref()
+                      .child(
+                          "/LOCATIONS/${authentication.currentUser?.uid}/${generateRandomString(10)}")
+                      .putFile(selectedImage)
+                      .then((value) async {
+                    final imageUrl = await value.ref.getDownloadURL();
+                    // DocumentReference documentReference =
+                    //     firestore.collection(locationsCollectionName).doc();
+                    //     String id = documentReference.id;
+                    Location locationToUpload = Location(
+                        category: categorySelected,
+                        declinationReason: "",
+                        description: description.text,
+                        createdAt: FieldValue.serverTimestamp(),
+                        id: "",
+                        imageUrl: imageUrl,
+                        location: locationSelected,
+                        publishedAt: FieldValue.serverTimestamp(),
+                      
+                        // ratingsAverage: 0.0,
+                        ratingsSize: 0,
+                          ratingsTotal: 0,
+                        status: "pending",
+                        title: title.text,
+                        uploadedBy: authentication.currentUser!.uid);
+
+                    // log(locationToUpload.toMap().toString());
+
+                    firestore
+                        .collection(uploadedLocationsCollectionName)
+                        .add(locationToUpload.toMap())
+                        .then((value) {
+                      value.update({"id": value.id});
+                      setState(() {
+                        buttonLoading = false;
+                      });
+                      bottomAlert(
+                          context: context,
+                          title: "Upload Success",
+                          message: "Location uploaded successfully",
+                          isError: false);
+                    });
+                    // log(imageUrl);
+                  });
+                }
               },
             )
           ],

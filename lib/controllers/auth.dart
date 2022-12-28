@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:review_app/constants.dart';
 import 'package:review_app/models/UserModel.dart';
+import 'package:review_app/providers/UserProvider.dart';
 
 Future<Map> createUser(
     {required UserModel user, required String password}) async {
@@ -29,31 +32,42 @@ Future<Map> createUser(
 }
 
 Future<Map> signInUser(
-    {required String email, required String password}) async {
+    {required String email,
+    required String password,
+    required BuildContext context}) async {
   bool result = false;
+  String userRole = "";
+  String message = "";
   try {
     await authentication
         .signInWithEmailAndPassword(email: email, password: password)
-        .then((value) {
-      firestore
+        .then((value) async {
+      await firestore
           .collection(userCollectionName)
           .doc(value.user?.uid)
           .get()
           .then((value) {
-            log(value.data(). toString());
-          });
+        UserModel userModel = UserModel.fromFirebase(value.data() as Map);
+
+        // log(userRole);
+        Provider.of<UserProvider>(context, listen: false)
+            .updateUserProvider(userModel);
+        result = true;
+        message = "Success";
+        userRole = userModel.role;
+      });
       // user.userId = value.user!.uid;
       // user.createdAt = FieldValue.serverTimestamp();
       // cloudFirestoreInstance
       //     .collection(userCollectionName)
       //     .doc(value.user?.uid)
       //     .set(user.toMap());
-      result = true;
-      return {"result": result, "message": "Success"};
+
+      // return {"result": result, "message": "Success",};
     });
   } on FirebaseAuthException catch (e) {
     return {"result": result, "message": e.message.toString()};
   }
 
-  return {"result": result, "message": "Something went wrong"};
+  return {"result": result, "message": message, "userRole": userRole};
 }

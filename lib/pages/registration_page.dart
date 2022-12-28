@@ -117,9 +117,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       gender: "",
                       middleName: "",
                       onlineStatus: false,
+                      role: "regular_user",
                       phoneNumber: "",
                       profilePhoto: "",
                       userId: "",
+                      username: username.text,
                       surname: lastName.text);
                   createUser(user: user, password: password.text).then((value) {
                     setState(() {
@@ -133,13 +135,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         (route) => false,
                       );
-                      customAlert(
+                      bottomAlert(
                           context: context,
-                          type: "success",
-                          title: "Registered",
-                          desc: "Account created");
+                          title: "Registration Successfull",
+                          message: "Login to access account",
+                          isError: false);
+                      // middleAlert(
+                      //     context: context,
+                      //     type: "success",
+                      //     title: "Registered",
+                      //     desc: "Account created");
                     } else {
-                      customAlert(
+                      middleAlert(
                           context: context,
                           type: "error",
                           title: "Error",

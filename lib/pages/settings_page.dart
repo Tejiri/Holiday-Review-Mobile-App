@@ -119,16 +119,24 @@ class _SettingsPageState extends State<SettingsPage> {
                                 text: "Logout",
                                 key: _key,
                                 onSubmit: () {
-                                  Future.delayed(
-                                    Duration(seconds: 1),
-                                    () => Navigator.pushAndRemoveUntil(
-                                        context,
-                                        // _key.currentState?.reset()
-                                        MaterialPageRoute(
-                                          builder: (context) => LoginPage(),
-                                        ),
-                                        (route) => false),
-                                  );
+                                     authentication.signOut().then((value) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                      (route) => false);
+                });
+                                  // Future.delayed(
+                                  //   Duration(seconds: 1),
+                                  //   () => Navigator.pushAndRemoveUntil(
+                                  //       context,
+                                  //       // _key.currentState?.reset()
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => LoginPage(),
+                                  //       ),
+                                  //       (route) => false),
+                                  // );
                                 },
                               );
                             },

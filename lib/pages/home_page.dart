@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:review_app/constants.dart';
+import 'package:review_app/controllers/random.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/pages/location_page.dart';
 import 'package:review_app/pages/login_page.dart';
@@ -128,12 +129,14 @@ class _HomePageState extends State<HomePage> {
               // }
 
               else if (value == 1) {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ),
-                    (route) => false);
+                authentication.signOut().then((value) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                      (route) => false);
+                });
               }
             }),
             // IconButton(
@@ -145,11 +148,23 @@ class _HomePageState extends State<HomePage> {
         body: StreamBuilder(
             stream: firestore
                 .collection(uploadedLocationsCollectionName)
+                .where("status", isEqualTo: "published")
+                .orderBy("createdAt", descending: true)
                 .snapshots(),
             builder: (BuildContext context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
                     locationSnapshot) {
               if (locationSnapshot.hasData) {
+                if (locationSnapshot.data?.size == 0) {
+                  return Container(
+                      margin: EdgeInsets.only(top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          heading(title: "No locations published yet"),
+                        ],
+                      ));
+                }
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ListView(
@@ -159,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                           document.data()! as Map<String, dynamic>;
                       Location location = Location.fromFirebase(data);
                       // log(data.toString());
+
                       if (searchController.text == "") {
                         return singleLocationContainer(location: location);
                       }
@@ -206,7 +222,9 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => LocationPage(locationId: location.id),
+                builder: (context) => LocationPage(
+                  location: location,
+                ),
               ));
         },
         child: ClipRRect(
@@ -258,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                                       ignoreGestures: true,
                                       updateOnDrag: false,
                                       itemSize: 15,
-                                      initialRating: location.ratingsAverage,
+                                      initialRating: reviewsAverage(location),
                                       // minRating: 1,
                                       direction: Axis.horizontal,
                                       allowHalfRating: true,
@@ -277,7 +295,8 @@ class _HomePageState extends State<HomePage> {
                                       style: subHeading,
                                     ),
                                   ],
-                                )
+                                ),
+                                timeAgoText(cratedAt: location.createdAt)
 
                                 // // Text("Abuja")
                               ],

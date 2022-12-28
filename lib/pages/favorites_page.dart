@@ -41,11 +41,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
   Widget singleFavorites() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LocationPage(locationId: ""),
-            ));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => LocationPage(locationId: ""),
+        //     ));
       },
       child: Container(
         padding: EdgeInsets.all(10),

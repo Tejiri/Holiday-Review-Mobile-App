@@ -4,12 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:review_app/controllers/random.dart';
+import 'package:review_app/models/location.dart';
+import 'package:review_app/models/review.dart';
 
 final authentication = FirebaseAuth.instance;
 final firestore = FirebaseFirestore.instance;
 final storage = FirebaseStorage.instance;
-
 
 const userCollectionName = "USERS";
 const categoriesCollectionName = "CATEGORIES";
@@ -17,6 +18,8 @@ const locationsCollectionName = "LOCATIONS";
 const uploadedLocationsCollectionName = "UPLOADED_LOCATIONS";
 const commentsCollectionName = "COMMENTS";
 const reviewsCollectionName = "REVIEWS";
+const reportsCollectionName = "REPORTS";
+
 // const userCollectionName = "USERS";
 
 const headingStyle = "";
@@ -34,3 +37,15 @@ const Gradient secondaryColorGradient = LinearGradient(
     darkBlueGray,
   ],
 );
+
+Widget timeAgoText(
+    {var cratedAt, Color? color, double? fontSize, FontWeight? fontWeight}) {
+  var date = cratedAt.toDate();
+  return Text(
+    "${timeAgo(date)}",
+    style: TextStyle(
+        fontSize: fontSize ?? 14,
+        fontWeight: fontWeight ?? FontWeight.bold,
+        color: color ?? primaryColor),
+  );
+}
