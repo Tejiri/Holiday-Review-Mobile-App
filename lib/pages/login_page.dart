@@ -7,11 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:review_app/constants.dart';
 import 'package:review_app/controllers/auth.dart';
-import 'package:review_app/pages/bottom_navigation_page.dart';
+import 'package:review_app/pages/regular_user_pages/bottom_navigation_page.dart';
 import 'package:review_app/pages/moderator_pages/moderator_homepage.dart';
 import 'package:review_app/pages/registration_page.dart';
-import 'package:review_app/widgets/form_components.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/custom_widgets/form_components.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {

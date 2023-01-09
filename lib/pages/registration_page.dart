@@ -6,10 +6,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:review_app/constants.dart';
 import 'package:review_app/controllers/auth.dart';
 import 'package:review_app/models/UserModel.dart';
-import 'package:review_app/pages/bottom_navigation_page.dart';
+import 'package:review_app/pages/regular_user_pages/bottom_navigation_page.dart';
 import 'package:review_app/pages/login_page.dart';
-import 'package:review_app/widgets/form_components.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/custom_widgets/form_components.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RegistrationPage extends StatefulWidget {

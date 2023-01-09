@@ -10,7 +10,7 @@ import 'package:review_app/controllers/random.dart';
 import 'package:review_app/models/Report.dart';
 import 'package:review_app/models/review.dart';
 import 'package:review_app/pages/login_page.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 
 class ReportsPage extends StatefulWidget {
   const ReportsPage({super.key});

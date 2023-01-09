@@ -6,7 +6,7 @@ import 'package:review_app/constants.dart';
 import 'package:review_app/models/comment.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/models/review.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 
 class CommentsPage extends StatefulWidget {
   Review pinnedReview;

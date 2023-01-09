@@ -5,10 +5,10 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:review_app/constants.dart';
-import 'package:review_app/pages/favorites_page.dart';
-import 'package:review_app/pages/home_page.dart';
+import 'package:review_app/pages/regular_user_pages/favorites_page.dart';
+import 'package:review_app/pages/regular_user_pages/home_page.dart';
 import 'package:review_app/pages/login_page.dart';
-import 'package:review_app/pages/settings_page.dart';
+import 'package:review_app/pages/regular_user_pages/settings_page.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({super.key});

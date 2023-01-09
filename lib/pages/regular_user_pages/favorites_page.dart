@@ -3,8 +3,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:review_app/constants.dart';
-import 'package:review_app/pages/location_page.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/pages/regular_user_pages/location_page.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});

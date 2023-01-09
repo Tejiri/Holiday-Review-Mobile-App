@@ -10,9 +10,9 @@ import 'package:review_app/models/UserModel.dart';
 import 'package:review_app/models/comment.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/models/review.dart';
-import 'package:review_app/pages/comments_page.dart';
-import 'package:review_app/widgets/form_components.dart';
-import 'package:review_app/widgets/location_owner_componenets.dart';
+import 'package:review_app/pages/regular_user_pages/comments_page.dart';
+import 'package:review_app/custom_widgets/form_components.dart';
+import 'package:review_app/custom_widgets/location_owner_componenets.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:skeletons/skeletons.dart';
 

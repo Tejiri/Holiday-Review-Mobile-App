@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:review_app/constants.dart';
-import 'package:review_app/pages/locations_management_page.dart';
+import 'package:review_app/pages/regular_user_pages/locations_management_page.dart';
 import 'package:review_app/pages/login_page.dart';
-import 'package:review_app/pages/upload_location_page.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/pages/regular_user_pages/upload_location_page.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class SettingsPage extends StatefulWidget {

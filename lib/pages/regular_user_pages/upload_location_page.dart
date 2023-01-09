@@ -12,8 +12,8 @@ import 'package:review_app/constants.dart';
 import 'package:review_app/controllers/numbers.dart';
 import 'package:review_app/controllers/random.dart';
 import 'package:review_app/models/location.dart';
-import 'package:review_app/widgets/form_components.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/custom_widgets/form_components.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class UploadLocationPage extends StatefulWidget {

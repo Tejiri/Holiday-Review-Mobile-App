@@ -11,9 +11,9 @@ import 'package:review_app/constants.dart';
 import 'package:review_app/controllers/random.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/models/review.dart';
-import 'package:review_app/pages/comments_page.dart';
+import 'package:review_app/pages/regular_user_pages/comments_page.dart';
 import 'package:review_app/providers/UserRatingProvider.dart';
-import 'package:review_app/widgets/ui_components.dart';
+import 'package:review_app/custom_widgets/ui_components.dart';
 import 'package:skeletons/skeletons.dart';
 
 class LocationPage extends StatefulWidget {
