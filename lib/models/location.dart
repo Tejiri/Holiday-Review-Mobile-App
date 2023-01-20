@@ -1,13 +1,12 @@
 class Location {
   late String category;
-  var createdAt;
+  late var createdAt;
   late String declinationReason;
   late String description;
   late String id;
   late String imageUrl;
   late String location;
-  var publishedAt;
-  // late double ratingsAverage;
+  late var publishedAt;
   late double ratingsSize;
   late double ratingsTotal;
   late String status;
@@ -23,7 +22,6 @@ class Location {
     required this.imageUrl,
     required this.location,
     required this.publishedAt,
-    // required this.ratingsAverage,
     required this.ratingsSize,
     required this.ratingsTotal,
     required this.status,
@@ -41,7 +39,6 @@ class Location {
     locationMap["imageUrl"] = imageUrl;
     locationMap["location"] = location;
     locationMap["publishedAt"] = publishedAt;
-    // locationMap["ratingsAverage"] = ratingsAverage;
     locationMap["ratingsSize"] = ratingsSize;
     locationMap["ratingsTotal"] = ratingsTotal;
     locationMap["status"] = status;
@@ -59,7 +56,6 @@ class Location {
     imageUrl = data["imageUrl"];
     location = data["location"];
     publishedAt = data["publishedAt"];
-    // ratingsAverage = data["ratingsAverage"];
     ratingsSize = data["ratingsSize"];
     ratingsTotal = data["ratingsTotal"];
     status = data["status"];

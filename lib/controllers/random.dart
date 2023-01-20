@@ -4,31 +4,17 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:review_app/constants.dart';
-import 'package:review_app/models/Report.dart';
+import 'package:review_app/utils/constants.dart';
+import 'package:review_app/models/report.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/models/review.dart';
-
-// String generateRandomString(int len) {
-//   String uid = (authentication.currentUser?.uid).toString();
-//   var r = Random();
-//   const _chars =
-//       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-//   String rand =
-//       List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
-//   return (rand + uid);
-// }
 
 Future<File?> testCompressAndGetFile(File file, String targetPath) async {
   var result = await FlutterImageCompress.compressAndGetFile(
     file.absolute.path,
     file.path + targetPath,
     quality: 60,
-    // rotate: 180,
   );
-
-  // print(file.lengthSync());
-  // print(result.lengthSync());
 
   return result;
 }
@@ -60,18 +46,6 @@ double reviewsAverage(Location location) {
   return average.isNaN ? 0 : average;
 }
 
-//  Future<Uint8List?> testCompressFile(File file) async {
-//     var result = await FlutterImageCompress.compressWithFile(
-//       file.absolute.path,
-//       minWidth: 2300,
-//       minHeight: 1500,
-//       quality: 94,
-//       rotate: 90,
-//     );
-//     // print(file.lengthSync());
-//     // print(result.length);
-//     return result;
-//   }
 
 sendReview(
     {required Location location,
@@ -82,23 +56,18 @@ sendReview(
     required previousRating}) {
   print(location.id.toString());
   print(newReview.toString());
-  // Create a reference to the document the transaction will use
   DocumentReference documentReference = FirebaseFirestore.instance
       .collection(uploadedLocationsCollectionName)
       .doc(location.id);
 
   return FirebaseFirestore.instance
       .runTransaction((transaction) async {
-        // Get the document
         DocumentSnapshot snapshot = await transaction.get(documentReference);
         if (!snapshot.exists) {
           throw Exception("Location does not exist!");
         }
 
-        // Update the follower count based on the current count
-        // Note: this could be done without a transaction
-        // by updating the population using FieldValue.increment()
-        if (newReview) {
+       if (newReview) {
           double ratingsSize = snapshot.get("ratingsSize") + 1;
           double ratingsTotal = snapshot.get('ratingsTotal') + userRating;
           transaction.update(documentReference,
@@ -133,10 +102,6 @@ sendReview(
             "rating": userRating,
           });
         }
-
-        // Perform an update on the document
-
-        // Return the new count
         return {'ratingsSize': snapshot.get("ratingsSize"), 'ratingsTotal': snapshot.get("ratingsTotal")};
       })
       .then((value) => print("Follower count updated to $value"))
@@ -147,8 +112,7 @@ deleteReview({
   required Report report,
   required Review review,
 }) {
-  // Create a reference to the document the transaction will use
-  DocumentReference documentReference = FirebaseFirestore.instance
+ DocumentReference documentReference = FirebaseFirestore.instance
       .collection(uploadedLocationsCollectionName)
       .doc(report.locationId);
 
@@ -175,10 +139,7 @@ deleteReview({
             .delete();
         firestore.collection(reportsCollectionName).doc(report.id).delete();
 
-        // Perform an update on the document
-
-        // Return the new count
-        return {'ratingsSize': ratingsSize, 'ratingsTotal': ratingsTotal};
+       return {'ratingsSize': ratingsSize, 'ratingsTotal': ratingsTotal};
       })
       .then((value) => print("Report Deleted"))
       .catchError((error) => print("Failed to delete report"));
@@ -196,7 +157,6 @@ Future<QuerySnapshot<Map<String, dynamic>>> getReviewsQuerySnapsot(
       .get()
       .then((value) {
     finalValue = value;
-    // return value;
   });
 
   return finalValue;

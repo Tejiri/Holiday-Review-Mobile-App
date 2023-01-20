@@ -2,10 +2,11 @@ class Report {
   late String commentId;
   var createdAt;
   late String locationId;
-  late String message;
+  late String additionalComment;
+  late String reportedMessage;
   late String reportReason;
   late String reportStatus;
-  var reportedById;
+  late String reportedById;
   late String reportedId;
   late String reviewId;
   late String id;
@@ -14,19 +15,22 @@ class Report {
       {required this.commentId,
       required this.createdAt,
       required this.locationId,
-      required this.message,
+      required this.additionalComment,
+      required this.reportedMessage,
       required this.reportReason,
       required this.reportStatus,
       required this.reportedById,
       required this.reportedId,
-      required this.reviewId,required this.id});
+      required this.reviewId,
+      required this.id});
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> reportMap = Map<String, dynamic>();
     reportMap["commentId"] = commentId;
     reportMap["createdAt"] = createdAt;
     reportMap["locationId"] = locationId;
-    reportMap["message"] = message;
+    reportMap["additionalComment"] = additionalComment;
+    reportMap["reportedMessage"] = reportedMessage;
     reportMap["reportReason"] = reportReason;
     reportMap["reportStatus"] = reportStatus;
     reportMap["reportedById"] = reportedById;
@@ -40,7 +44,8 @@ class Report {
     commentId = data["commentId"];
     createdAt = data["createdAt"];
     locationId = data["locationId"];
-    message = data["message"];
+    additionalComment = data["additionalComment"];
+    reportedMessage = data["reportedMessage"];
     reportReason = data["reportReason"];
     reportStatus = data["reportStatus"];
     reportedById = data["reportedById"];

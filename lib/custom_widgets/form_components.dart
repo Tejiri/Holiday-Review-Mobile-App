@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/utils/constants.dart';
 
 Widget customTextField({
   required BuildContext context,

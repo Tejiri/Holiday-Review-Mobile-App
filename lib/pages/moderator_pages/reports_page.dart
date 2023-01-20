@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:readmore/readmore.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/utils/constants.dart';
 import 'package:review_app/controllers/random.dart';
-import 'package:review_app/models/Report.dart';
+import 'package:review_app/models/report.dart';
 import 'package:review_app/models/review.dart';
 import 'package:review_app/pages/login_page.dart';
 import 'package:review_app/custom_widgets/ui_components.dart';
@@ -79,7 +79,7 @@ class _ReportsPageState extends State<ReportsPage> {
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
                     Report report = Report.fromFirebase(data);
-                    log(report.message);
+
                     return Dismissible(
                         // Each Dismissible must contain a Key. Keys allow Flutter sto
                         // uniquely identify widgets.
@@ -119,7 +119,8 @@ class _ReportsPageState extends State<ReportsPage> {
                                               .then((value) {
                                             if (value.exists) {
                                               Review review =
-                                                  Review.fromFirebase(data);
+                                                  Review.fromFirebase(
+                                                      value.data() as Map);
                                               deleteReview(
                                                   report: report,
                                                   review: review);
@@ -198,7 +199,9 @@ class _ReportsPageState extends State<ReportsPage> {
                           //     .showSnackBar(SnackBar(content: Text('$item dismissed')));
                         },
                         child: GestureDetector(
-                          onTap: () {},
+                          onLongPress: () {
+                            bottomSheetSentText(report.reportedMessage);
+                          },
                           child: Container(
                             margin: EdgeInsets.only(bottom: 10),
                             padding: EdgeInsets.only(
@@ -248,7 +251,7 @@ class _ReportsPageState extends State<ReportsPage> {
                                             child: Wrap(
                                               children: [
                                                 ReadMoreText(
-                                                  report.message,
+                                                  report.additionalComment,
                                                   trimCollapsedText:
                                                       'Read more',
                                                   trimExpandedText: 'Show less',
@@ -318,5 +321,34 @@ class _ReportsPageState extends State<ReportsPage> {
             return Container();
           }),
     );
+  }
+
+  bottomSheetSentText(String reportedMessage) {
+    // showBottomSheet()
+
+    // SafeArea(child: )
+    return showModalBottomSheet(
+        backgroundColor: Colors.white,
+        context: context,
+        isDismissible: true,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0)),
+        ),
+        builder: (BuildContext context) {
+          return Container(
+              height: 300,
+              padding: EdgeInsets.all(20),
+              child: ListView(
+                children: [
+                  heading(title: "Reported Text"),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(reportedMessage),
+                  )
+                ],
+              ));
+        });
   }
 }

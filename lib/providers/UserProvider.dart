@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:review_app/models/UserModel.dart';
+import 'package:review_app/models/user_model.dart';
 
 class UserProvider extends  ChangeNotifier{
  UserModel? userModel;

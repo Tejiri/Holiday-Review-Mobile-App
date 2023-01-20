@@ -7,7 +7,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/utils/constants.dart';
 import 'package:review_app/controllers/random.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/models/review.dart';

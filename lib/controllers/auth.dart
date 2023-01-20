@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:review_app/constants.dart';
-import 'package:review_app/models/UserModel.dart';
+import 'package:review_app/pages/login_page.dart';
+import 'package:review_app/utils/constants.dart';
+import 'package:review_app/models/user_model.dart';
 import 'package:review_app/providers/UserProvider.dart';
 
 Future<Map> createUser(
@@ -49,25 +51,27 @@ Future<Map> signInUser(
           .then((value) {
         UserModel userModel = UserModel.fromFirebase(value.data() as Map);
 
-        // log(userRole);
-        Provider.of<UserProvider>(context, listen: false)
+       Provider.of<UserProvider>(context, listen: false)
             .updateUserProvider(userModel);
         result = true;
         message = "Success";
         userRole = userModel.role;
       });
-      // user.userId = value.user!.uid;
-      // user.createdAt = FieldValue.serverTimestamp();
-      // cloudFirestoreInstance
-      //     .collection(userCollectionName)
-      //     .doc(value.user?.uid)
-      //     .set(user.toMap());
-
-      // return {"result": result, "message": "Success",};
     });
   } on FirebaseAuthException catch (e) {
     return {"result": result, "message": e.message.toString()};
   }
 
   return {"result": result, "message": message, "userRole": userRole};
+}
+
+signOutUser({required BuildContext context}) {
+  authentication.signOut().then((value) {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+        (route) => false);
+  });
 }

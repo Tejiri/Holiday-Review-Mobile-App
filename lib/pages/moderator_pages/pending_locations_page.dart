@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/controllers/auth.dart';
+import 'package:review_app/utils/constants.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/pages/login_page.dart';
 import 'package:review_app/custom_widgets/form_components.dart';
@@ -36,16 +37,7 @@ class _PendingLocationsPageState extends State<PendingLocationsPage> {
             ];
           }, onSelected: (value) {
             if (value == 0) {
-              authentication.signOut().then((value) {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ),
-                    (route) => false);
-              });
-              // showBottomSheet();
-              // print("My account menu is selected.");
+             signOutUser(context: context);
             }
           }),
         ],

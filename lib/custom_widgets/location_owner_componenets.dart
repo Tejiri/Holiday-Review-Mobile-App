@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/utils/constants.dart';
 import 'package:review_app/models/comment.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/models/review.dart';

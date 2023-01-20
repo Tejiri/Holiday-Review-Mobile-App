@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:review_app/constants.dart';
+import 'package:review_app/utils/constants.dart';
 
 String generateRandomString(int len) {
   String uid = (authentication.currentUser?.uid).toString();

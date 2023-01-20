@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/utils/constants.dart';
 import 'package:review_app/pages/regular_user_pages/bottom_navigation_page.dart';
 import 'package:review_app/pages/regular_user_pages/home_page.dart';
 import 'package:review_app/pages/login_page.dart';
-import 'package:review_app/pages/moderator_pages/moderator_homepage.dart';
+import 'package:review_app/pages/moderator_pages/moderator_home_page.dart';
 import 'package:review_app/providers/UserProvider.dart';
 import 'package:review_app/providers/UserRatingProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

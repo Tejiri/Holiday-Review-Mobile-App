@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/utils/constants.dart';
 import 'package:review_app/controllers/auth.dart';
-import 'package:review_app/models/UserModel.dart';
+import 'package:review_app/models/user_model.dart';
 import 'package:review_app/pages/regular_user_pages/bottom_navigation_page.dart';
 import 'package:review_app/pages/login_page.dart';
 import 'package:review_app/custom_widgets/form_components.dart';
@@ -104,7 +104,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 text: "Register",
                 context: context,
                 onTap: () {
-                  setState(() {
+                  if (password.text !=  confirmPassword.text) {
+                      middleAlert(
+                            context: context,
+                            type: "error",
+                            title: "Error",
+                            desc: ("Passords do not match"));
+                  }else{
+                     setState(() {
                     buttonLoading = true;
                   });
                   UserModel user = UserModel(
@@ -153,6 +160,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           desc: (value['message']));
                     }
                   });
+                  }
+                 
                 },
               ),
 

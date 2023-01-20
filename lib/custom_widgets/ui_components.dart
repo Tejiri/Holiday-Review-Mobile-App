@@ -4,9 +4,10 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:review_app/constants.dart';
+import 'package:review_app/models/report.dart';
+import 'package:review_app/utils/constants.dart';
 import 'package:review_app/controllers/random.dart';
-import 'package:review_app/models/UserModel.dart';
+import 'package:review_app/models/user_model.dart';
 import 'package:review_app/models/comment.dart';
 import 'package:review_app/models/location.dart';
 import 'package:review_app/models/review.dart';
@@ -178,6 +179,7 @@ Widget singleReview(
                           displayBottomSheetForUserReport(
                               context: context,
                               userToReportId: location.uploadedBy,
+                              reportedMessage: review.message,
                               locationId: location.id,
                               commentId: "",
                               reviewId: review.id);
@@ -311,6 +313,7 @@ displayBottomSheetForUserReport(
     {required context,
     required userToReportId,
     required locationId,
+    required reportedMessage,
     required commentId,
     required reviewId}) {
   showModalBottomSheet(
@@ -357,86 +360,86 @@ displayBottomSheetForUserReport(
                 color: Colors.black,
               ),
               reportReason(
-                context: context,
-                reportReason: 'Violence',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Violence',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Nudity',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Nudity',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Harrassment',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Harrassment',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Spam',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Spam',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Hate Speech',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Hate Speech',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Fraud',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Fraud',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
 
               reportReason(
-                context: context,
-                reportReason: 'False Information',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'False Information',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Bullying',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Bullying',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Just don\'t like it',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Just don\'t like it',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
               reportReason(
-                context: context,
-                reportReason: 'Something else',
-                userToReportId: userToReportId,
-                commentId: commentId,
-                locationId: locationId,
-                reviewId: reviewId,
-              ),
+                  context: context,
+                  reportReason: 'Something else',
+                  userToReportId: userToReportId,
+                  commentId: commentId,
+                  locationId: locationId,
+                  reviewId: reviewId,
+                  reportedMessage: reportedMessage),
 
               // Padding(padding: EdgeInsets.only(bottom: 10))
               // TextField(
@@ -454,6 +457,7 @@ Widget reportReason(
     {required context,
     required reportReason,
     required userToReportId,
+    required reportedMessage,
     required locationId,
     required reviewId,
     required commentId}) {
@@ -481,13 +485,13 @@ Widget reportReason(
                       GestureDetector(
                         onTap: () {
                           reportUser(
-                            additionalComment: additionalComment.text,
-                            postByUserId: userToReportId,
-                            reportReason: reportReason,
-                            commentId: commentId,
-                            locationId: locationId,
-                            reviewId: reviewId,
-                          );
+                              additionalComment: additionalComment.text,
+                              postByUserId: userToReportId,
+                              reportReason: reportReason,
+                              commentId: commentId,
+                              locationId: locationId,
+                              reviewId: reviewId,
+                              reportedMessage: reportedMessage);
 
                           additionalComment.text = '';
                           Navigator.pop(context);
@@ -527,19 +531,22 @@ reportUser(
     required postByUserId,
     required reportReason,
     required locationId,
+    required reportedMessage,
     required reviewId,
     required commentId}) {
-  firestore.collection(reportsCollectionName).add({
-    'message': additionalComment,
-    'reportedById': authentication.currentUser?.uid,
-    'reportedId': postByUserId,
-    'locationId': locationId,
-    'reviewId': reviewId,
-    'commentId': commentId,
-    'reportReason': reportReason,
-    'createdAt': FieldValue.serverTimestamp(),
-    'reportStatus': 'pending'
-  }).then((value) {
+  Report report = Report(
+      additionalComment: additionalComment,
+      commentId: commentId,
+      createdAt: FieldValue.serverTimestamp(),
+      id: "",
+      locationId: locationId,
+      reportReason: reportReason,
+      reportStatus: 'pending',
+      reportedById: authentication.currentUser!.uid,
+      reportedId: postByUserId,
+      reportedMessage: reportedMessage,
+      reviewId: reviewId);
+  firestore.collection(reportsCollectionName).add(report.toMap()).then((value) {
     value.update({"id": value.id});
   });
 }
@@ -574,7 +581,9 @@ showReportCommentWidegt({
                             : comment.commentBy,
                         locationId: location.id,
                         commentId: comment == null ? "" : comment.id,
-                        reviewId: review.id);
+                        reviewId: review.id,
+                        reportedMessage:
+                            comment == null ? review.message : comment.message);
                   },
                   child: Container(
                     padding: EdgeInsets.only(bottom: 10),
