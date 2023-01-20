@@ -43,20 +43,26 @@ Future<Map> signInUser(
   try {
     await authentication
         .signInWithEmailAndPassword(email: email, password: password)
-        .then((value) async {
-      await firestore
-          .collection(userCollectionName)
-          .doc(value.user?.uid)
-          .get()
-          .then((value) {
-        UserModel userModel = UserModel.fromFirebase(value.data() as Map);
+        .then((userValue) async {
+      if (userValue.user!.emailVerified) {
+        await firestore
+            .collection(userCollectionName)
+            .doc(userValue.user?.uid)
+            .get()
+            .then((value) {
+          UserModel userModel = UserModel.fromFirebase(value.data() as Map);
 
-       Provider.of<UserProvider>(context, listen: false)
-            .updateUserProvider(userModel);
-        result = true;
-        message = "Success";
-        userRole = userModel.role;
-      });
+          Provider.of<UserProvider>(context, listen: false)
+              .updateUserProvider(userModel);
+          result = true;
+          message = "Success";
+          userRole = userModel.role;
+        });
+      } else {
+        await authentication.currentUser?.sendEmailVerification().then((value) {
+          return {"result": result, "message": "Email not verified"};
+        });
+      }
     });
   } on FirebaseAuthException catch (e) {
     return {"result": result, "message": e.message.toString()};
