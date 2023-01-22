@@ -115,38 +115,6 @@ class _LoginPageState extends State<LoginPage> {
                             desc: (value['message']));
                       }
                     });
-
-                    // Navigator.pushAndRemoveUntil(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => BottomNavigationPage(),
-                    //   ),
-                    //   (route) => false,
-                    // );
-
-                    //   setState(() {
-                    //   buttonLoading = false;
-                    // });
-                    // if (value['result']) {
-                    //   Navigator.pushAndRemoveUntil(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => LoginPage(),
-                    //     ),
-                    //     (route) => false,
-                    //   );
-                    //   customAlert(
-                    //       context: context,
-                    //       type: AlertType.success,
-                    //       title: "Registered",
-                    //       desc: "Account created");
-                    // } else {
-                    //   customAlert(
-                    //       context: context,
-                    //       type: AlertType.error,
-                    //       title: "Error",
-                    //       desc: (value['message']));
-                    // }
                   },
                 ),
                 Padding(
@@ -193,12 +161,31 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget socialLogin({required String image}) {
-    return Container(
-        height: 60,
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: secondaryColor, width: 0.5)),
-        child: Image.asset(image));
+    return GestureDetector(
+      child: Container(
+          height: 60,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: secondaryColor, width: 0.5)),
+          child: Image.asset(image)),
+      onTap: () {
+        switch (image) {
+          case 'assets/images/google.png':
+            bottomAlert(
+                context: context, isError: true, message: "Coming soon...");
+            break;
+          case 'assets/images/facebook (2).png':
+            bottomAlert(
+                context: context, isError: true, message: "Coming soon...");
+            break;
+            case 'assets/images/phone.png':
+            bottomAlert(
+                context: context, isError: true, message: "Coming soon...");
+            break;
+          default:
+        }
+      },
+    );
   }
 }

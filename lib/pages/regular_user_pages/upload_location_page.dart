@@ -322,9 +322,6 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
                       .putFile(selectedImage)
                       .then((value) async {
                     final imageUrl = await value.ref.getDownloadURL();
-                    // DocumentReference documentReference =
-                    //     firestore.collection(locationsCollectionName).doc();
-                    //     String id = documentReference.id;
                     Location locationToUpload = Location(
                         category: categorySelected,
                         declinationReason: "",
@@ -334,15 +331,11 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
                         imageUrl: imageUrl,
                         location: locationSelected,
                         publishedAt: FieldValue.serverTimestamp(),
-                      
-                        // ratingsAverage: 0.0,
                         ratingsSize: 0,
                           ratingsTotal: 0,
                         status: "pending",
                         title: title.text,
                         uploadedBy: authentication.currentUser!.uid);
-
-                    // log(locationToUpload.toMap().toString());
 
                     firestore
                         .collection(uploadedLocationsCollectionName)
@@ -421,17 +414,13 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
             Align(
               alignment: Alignment.bottomLeft,
               child: Container(
-                // decoration:
-                // BoxDecoration(borderRadius: BorderRadius.circular(25)),
+                
                 height: 180,
                 width: 180,
-                // margin: EdgeInsets.only(right: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.file(
                     file,
-                    // width: 80,
-                    // height: 80,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -440,8 +429,6 @@ class _UploadLocationPageState extends State<UploadLocationPage> {
             Container(
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(10)),
-              // height: 200,
-              // width: 200,
               margin: EdgeInsets.only(right: 5, top: 5),
               child: Align(
                 alignment: Alignment.topRight,

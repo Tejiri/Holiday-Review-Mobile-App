@@ -19,7 +19,7 @@ class CommentsPage extends StatefulWidget {
 }
 
 class _CommentsPageState extends State<CommentsPage> {
-  bool showReview = true;
+  bool showReview = false;
   TextEditingController commentController = TextEditingController();
   var commentsStream;
   final ScrollController _scrollController = ScrollController();

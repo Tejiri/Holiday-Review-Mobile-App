@@ -60,6 +60,7 @@ Future<Map> signInUser(
         });
       } else {
         await authentication.currentUser?.sendEmailVerification().then((value) {
+          message = "Email not verified";
           return {"result": result, "message": "Email not verified"};
         });
       }

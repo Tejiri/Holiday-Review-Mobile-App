@@ -20,8 +20,6 @@ const commentsCollectionName = "COMMENTS";
 const reviewsCollectionName = "REVIEWS";
 const reportsCollectionName = "REPORTS";
 
-// const userCollectionName = "USERS";
-
 const headingStyle = "";
 const subHeadingStyle = "";
 

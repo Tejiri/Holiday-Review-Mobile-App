@@ -81,9 +81,7 @@ class _ReportsPageState extends State<ReportsPage> {
                     Report report = Report.fromFirebase(data);
 
                     return Dismissible(
-                        // Each Dismissible must contain a Key. Keys allow Flutter sto
-                        // uniquely identify widgets.
-                        key: UniqueKey(),
+                          key: UniqueKey(),
                         background: Container(
                           margin: EdgeInsets.only(bottom: 10),
                           padding: EdgeInsets.only(
@@ -93,9 +91,6 @@ class _ReportsPageState extends State<ReportsPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        // direction: DismissDirection.startToEnd,
-                        // Provide a function that tells the app
-                        // what to do after an item has been swiped away.
                         confirmDismiss: (value) async {
                           var delete;
                           return await showDialog(
@@ -104,7 +99,7 @@ class _ReportsPageState extends State<ReportsPage> {
                               return AlertDialog(
                                 title: const Text("Confirm"),
                                 content: const Text(
-                                    "Are you sure you wish to delete this comment?"),
+                                    "Are you sure you want to delete this comment?"),
                                 actions: <Widget>[
                                   ElevatedButton(
                                       onPressed: () {
@@ -154,17 +149,6 @@ class _ReportsPageState extends State<ReportsPage> {
                                                 .delete();
                                           });
                                         }
-
-                                        // firestore
-                                        //     .collection(Constants.notificationsName)
-                                        //     .doc(FirebaseAuth.instance.currentUser?.uid)
-                                        //     .collection(Constants.notificationsName)
-                                        //     .doc(documentId)
-                                        //     .delete();
-                                        // removeCommentFromPost(
-                                        //     postId: postId,
-                                        //     commentId: commentId,
-                                        //     user: senderId);
                                         Navigator.of(context).pop(true);
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -181,22 +165,9 @@ class _ReportsPageState extends State<ReportsPage> {
                               );
                             },
                           );
-
-                          // value = false;
-
-                          // return delete;
                         },
                         onDismissed: (direction) {
-                          // log(direction.name);
-                          // log(direction.index.toString());
-                          // Remove the item from the data source.
-                          // setState(() {
-                          //   items.removeAt(index);
-                          // });
-
-                          // Then show a snackbar.
-                          // ScaffoldMessenger.of(context)
-                          //     .showSnackBar(SnackBar(content: Text('$item dismissed')));
+                       
                         },
                         child: GestureDetector(
                           onLongPress: () {
@@ -214,19 +185,14 @@ class _ReportsPageState extends State<ReportsPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    // Image.asset(
-                                    //   'assets/images/renmiss_logo_2.png',
-                                    //   width: 40,
-                                    // ),
-
+                                 
                                     Icon(
                                       Icons.report,
                                       size: 40,
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(left: 10),
-                                      // padding: EdgeInsets.only(top: 15),
-                                      child: Column(
+                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
@@ -282,9 +248,7 @@ class _ReportsPageState extends State<ReportsPage> {
                                                           FontWeight.bold,
                                                       color: primaryColor),
                                                 ),
-                                                // timeAgoText(
-                                                //     cratedAt: report.createdAt),
-                                              ],
+                                               ],
                                             ),
                                           ),
                                         ],
@@ -302,16 +266,6 @@ class _ReportsPageState extends State<ReportsPage> {
                           ),
                         ));
 
-                    // Location location = Location.fromFirebase(data);
-                    // // log(data.toString());
-                    // if (searchController.text == "") {
-                    //   return singleLocationContainer(location: location);
-                    // }
-                    // if (location.title
-                    //     .toLowerCase()
-                    //     .contains(searchController.text.toLowerCase())) {
-                    //   return singleLocationContainer(location: location);
-                    // }
                     return Container();
                   }).toList(),
                 ),

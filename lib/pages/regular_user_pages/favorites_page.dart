@@ -41,11 +41,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   Widget singleFavorites() {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => LocationPage(locationId: ""),
-        //     ));
+     
       },
       child: Container(
         padding: EdgeInsets.all(10),
@@ -61,7 +57,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
               height: 100,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.amber,
                   image: DecorationImage(
                       image: AssetImage("assets/images/placeholder.jpg"),
                       fit: BoxFit.cover)),
@@ -73,8 +68,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 Text("Restaurant"),
                 Text("Abuja - Nigeria"),
                 RatingBar.builder(
-                  // tapOnlyMode: false,
-                  // updateOnDrag: true,
                   ignoreGestures: true,
                   itemSize: 13,
                   initialRating: 3,
@@ -82,8 +75,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   direction: Axis.horizontal,
                   allowHalfRating: true,
                   itemCount: 5,
-                  // itemPadding:
-                  //     EdgeInsets.symmetric(horizontal: 4.0),
                   itemBuilder: (context, _) => Icon(
                     size: 1,
                     Icons.star,
@@ -93,16 +84,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     print(rating);
                   },
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text(
-                //       "3 days ago",
-                //       style: TextStyle(color: Color.fromARGB(255, 118, 115, 115)),
-                //     ),
-
-                //   ],
-                // )
+              
               ],
             )
           ],
