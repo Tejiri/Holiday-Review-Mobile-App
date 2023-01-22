@@ -88,14 +88,14 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              "Software Engineering",
+              "Holiday Review",
               style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
             Text(
-              "Principles",
+              "Portal",
               style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
