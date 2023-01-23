@@ -59,8 +59,9 @@ Future<Map> signInUser(
           userRole = userModel.role;
         });
       } else {
+         message = "Email not verified";
         await authentication.currentUser?.sendEmailVerification().then((value) {
-          message = "Email not verified";
+         
           return {"result": result, "message": "Email not verified"};
         });
       }

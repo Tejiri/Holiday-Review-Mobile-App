@@ -81,7 +81,7 @@ class _ReportsPageState extends State<ReportsPage> {
                     Report report = Report.fromFirebase(data);
 
                     return Dismissible(
-                          key: UniqueKey(),
+                        key: UniqueKey(),
                         background: Container(
                           margin: EdgeInsets.only(bottom: 10),
                           padding: EdgeInsets.only(
@@ -150,6 +150,14 @@ class _ReportsPageState extends State<ReportsPage> {
                                           });
                                         }
                                         Navigator.of(context).pop(true);
+                                        bottomAlert(
+                                            context: context,
+                                            isError: false,
+                                            title: "Published",
+                                            message: (report.commentId == ""
+                                                    ? "Review"
+                                                    : "Comment") +
+                                                " has been deleted successfully");
                                       },
                                       style: ElevatedButton.styleFrom(
                                           primary: Colors.red),
@@ -166,9 +174,7 @@ class _ReportsPageState extends State<ReportsPage> {
                             },
                           );
                         },
-                        onDismissed: (direction) {
-                       
-                        },
+                        onDismissed: (direction) {},
                         child: GestureDetector(
                           onLongPress: () {
                             bottomSheetSentText(report.reportedMessage);
@@ -185,14 +191,13 @@ class _ReportsPageState extends State<ReportsPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                 
                                     Icon(
                                       Icons.report,
                                       size: 40,
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(left: 10),
-                                       child: Column(
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
@@ -248,7 +253,7 @@ class _ReportsPageState extends State<ReportsPage> {
                                                           FontWeight.bold,
                                                       color: primaryColor),
                                                 ),
-                                               ],
+                                              ],
                                             ),
                                           ),
                                         ],

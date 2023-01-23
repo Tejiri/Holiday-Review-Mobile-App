@@ -371,7 +371,7 @@ class _PendingLocationsPageState extends State<PendingLocationsPage> {
                       padding: EdgeInsets.only(top: 10, bottom: 10),
                       // padding: EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
-                          border: Border(bottom: BorderSide(width: 0.2))),
+                          border: Border(top: BorderSide(width: 0.2))),
                       child: Text(
                         'Cancel',
                         // style: TextStyle(color: greenRenMissColor),
